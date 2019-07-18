@@ -1,14 +1,15 @@
 package com.trading.patterns;
 
-import static com.trading.patterns.common.Utils.extractDataAtEvenPositions;
-import static com.trading.patterns.common.Utils.extractDataAtOddPositions;
-import static com.trading.patterns.common.Utils.isSorted;
-import static com.trading.patterns.common.Utils.isSortedArrayDecreasing;
-import static com.trading.patterns.common.Utils.isSortedArrayIncreasing;
+import static com.trading.common.Utils.extractDataAtEvenPositions;
+import static com.trading.common.Utils.extractDataAtOddPositions;
+import static com.trading.common.Utils.isSortedInDecreasingOrder;
+import static com.trading.common.Utils.isSortedInIncreasingOrder;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicReference;
 
-import com.trading.remote.BuyPriceProvider;
+import com.trading.manager.BuyPriceProvider;
 
 /**
  * 
@@ -17,30 +18,31 @@ import com.trading.remote.BuyPriceProvider;
  */
 public class PennantPattern extends Pattern {
 
-	public PennantPattern(BuyPriceProvider bp, long patternValidity, String asset, double noise) {
-		super(bp, patternValidity, asset, noise);
+	public PennantPattern(BuyPriceProvider bp, long patternValidity, double noise) {
+		super(bp, patternValidity, noise);
 	}
 
 	@Override
 	public void patternFind() {
-		System.out.println("pennant pattern lookup started");
+		System.out.println("checking for pattern ");
 		startTime = new Date();
-		double[] prices = getInitData(5);// fill datastructure to start the algorithm
-		System.out.println(new Date().getTime() - startTime.getTime());
+		double[] prices = getInitData(6);// fill datastructure to start the algorithm
+
 		while (new Date().getTime() - startTime.getTime() < maxExectuionTime) {
-			System.out.println("checking for pattern ");
 			// check for pattern
 			double[] dataAtEvenPositions = extractDataAtEvenPositions(prices);
 			double[] dataAtOddPositions = extractDataAtOddPositions(prices);
 
 			// found
-			if (isSorted(dataAtEvenPositions) && isSorted(dataAtOddPositions)
-					&& isSortedArrayDecreasing(dataAtEvenPositions) && isSortedArrayIncreasing(dataAtOddPositions)) {
+			boolean isSortedIncreasing = isSortedInIncreasingOrder(dataAtEvenPositions);
+			boolean isSortedDecreasing = isSortedInDecreasingOrder(dataAtOddPositions);
 
+			if (isSortedIncreasing && isSortedDecreasing) {
 				patternBuyPrice = prices[prices.length - 1];
-				patternFoundTime = new Date();
-				System.out.println(" pattern found ");
-
+				patternFoundTime = new AtomicReference<Date>(new Date());
+				patternData = prices;
+				System.out.println("pattern found for data " + Arrays.toString(prices));
+				System.out.println("pattern date" + patternFoundTime);
 				patternValidityWatch();
 				return;
 
@@ -48,50 +50,56 @@ public class PennantPattern extends Pattern {
 
 			// not found
 			else {
-				System.out.println("no pattern found ...continue lookup");
 				prices = getUpdatedArrayFor(prices);
+
+			}
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
 	}
 
 	private double[] getUpdatedArrayFor(double[] prices) {
+		// System.out.println("Data to shift " + Arrays.toString(prices));
 
-		double newValue = buyPriceProvider.getPrice(asset);
+		double newValue = buyPriceProvider.getPrice();
 
-		while (Math.abs(newValue - prices[prices.length - 1]) < noise) {// loop until a new value is big engough
-			newValue = buyPriceProvider.getPrice(asset);
-			System.out.println("no matching price found");
+		while (Math.abs(newValue - prices[prices.length - 1]) <= noise) {// loop until a new value is big engough
+			newValue = buyPriceProvider.getPrice();
 
 		}
 
 		double[] newArray = new double[prices.length];
-		newArray[newArray.length - 2] = newValue;
-		for (int i = 1; i < newArray.length - 2; i++) {
+		newArray[newArray.length - 1] = newValue;
+		int j = 0;
+		for (int i = 1; i < prices.length && j < newArray.length - 1; i++, j++) {
 
-			newArray[i - 1] = prices[i];
+			newArray[j] = prices[i];
+
 		}
-
 		return newArray;
 	}
 
 	private double[] getInitData(int size) {
-		System.out.println("data initialization started");
 		double[] prices = new double[size];
-		double lastCheckedPrice = buyPriceProvider.getPricesFromMatchingPatternForTestPurpose();
+		double lastCheckedPrice = 0;
+		while ((lastCheckedPrice = buyPriceProvider.getPrice()) == 0)
+			;
 		prices[0] = lastCheckedPrice;
 
 		int i = 1;
 		while (i < size) {
 
-			double newPrice = buyPriceProvider.getPricesFromMatchingPatternForTestPurpose();
-
+			double newPrice = buyPriceProvider.getPrice();
 			if (Math.abs(lastCheckedPrice - newPrice) > noise) {
 				prices[i] = newPrice;
+				lastCheckedPrice = prices[i - 1];
 				i++;
 			}
 
 		}
-		System.out.println("data initialization finished");
 		return prices;
 
 	}

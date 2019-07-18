@@ -21,5 +21,46 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
+        <dependency>
+        <groupId>org.knowm.xchart</groupId>
+        <artifactId>xchart</artifactId>
+        <version>3.5.4</version>
+    </dependency>
+   <dependency>
+  <groupId>com.github.binance-exchange</groupId>
+  <artifactId>binance-java-api</artifactId>
+  <version>master-SNAPSHOT</version>
+ </dependency>
+    <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
+<dependency>
+    <groupId>org.apache.httpcomponents</groupId>
+    <artifactId>httpclient</artifactId>
+    <version>4.1-alpha1</version>
+</dependency>
+    <!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk -->
+<dependency>
+    <groupId>com.amazonaws</groupId>
+    <artifactId>aws-java-sdk</artifactId>
+    <version>1.2.1</version>
+</dependency>
+    <!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
+<dependency>
+    <groupId>com.googlecode.json-simple</groupId>
+    <artifactId>json-simple</artifactId>
+    <version>1.1</version>
+</dependency>
+    <!-- https://mvnrepository.com/artifact/log4j/log4j -->
+<dependency>
+    <groupId>log4j</groupId>
+    <artifactId>log4j</artifactId>
+    <version>1.2.17</version>
+</dependency>
+    
   </dependencies>
+  <repositories>
+  <repository>
+    <id>jitpack.io</id>
+    <url>https://jitpack.io</url>
+  </repository>
+</repositories>
 </project>
