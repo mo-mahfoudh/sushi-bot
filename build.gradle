@@ -1,0 +1,55 @@
+plugins {
+    id 'java' // java support
+    id 'maven-publish' // publish to a maven repo (local or mvn central, has to be defined)
+    id 'com.diffplug.gradle.spotless' version '3.23.0'// code format
+
+}
+
+ext {
+    javaVersion = JavaVersion.VERSION_1_8
+
+    scriptsLocation = 'gradle' + File.separator + 'scripts' + File.separator //location of script plugins
+}
+
+apply from: scriptsLocation + 'spotless.gradle'
+apply from: scriptsLocation + 'checkJavaVersion.gradle'
+
+repositories {
+    mavenLocal()
+    jcenter() //searches in bintray's repository 'jCenter', which contains Maven Central
+    maven {
+        url = 'https://jitpack.io'  // allows github repos as dependencies
+    }
+
+    maven {
+        url = 'http://repo.maven.apache.org/maven2'
+    }
+}
+
+dependencies {
+    compile 'org.knowm.xchart:xchart:3.5.4'
+    compile 'com.github.binance-exchange:binance-java-api:master-SNAPSHOT'
+    compile 'org.apache.httpcomponents:httpclient:4.1-alpha1'
+    compile 'com.amazonaws:aws-java-sdk:1.2.1'
+    compile 'com.googlecode.json-simple:json-simple:1.1'
+
+    compile 'log4j:log4j:1.2.17'
+    testCompile 'junit:junit:3.8.1'
+}
+
+group = 'com.github.mo-mahfoudh'
+version = '0.0.1-SNAPSHOT'
+description = 'sushi-bot'
+sourceCompatibility = '1.8'
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from(components.java)
+        }
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
