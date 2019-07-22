@@ -1,15 +1,15 @@
-package com.trading.patterns;
+package com.github.momafoudh.sushibot.patterns;
 
-import static com.trading.common.Utils.extractDataAtEvenPositions;
-import static com.trading.common.Utils.extractDataAtOddPositions;
-import static com.trading.common.Utils.isSortedInDecreasingOrder;
-import static com.trading.common.Utils.isSortedInIncreasingOrder;
+import static com.github.momafoudh.sushibot.common.Utils.extractDataAtEvenPositions;
+import static com.github.momafoudh.sushibot.common.Utils.extractDataAtOddPositions;
+import static com.github.momafoudh.sushibot.common.Utils.isSortedInDecreasingOrder;
+import static com.github.momafoudh.sushibot.common.Utils.isSortedInIncreasingOrder;
 
 import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicReference;
 
-import com.trading.manager.BuyPriceProvider;
+import com.github.momafoudh.sushibot.manager.BuyPriceProvider;
 
 /**
  * 

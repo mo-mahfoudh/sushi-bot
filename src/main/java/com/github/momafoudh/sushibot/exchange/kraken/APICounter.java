@@ -1,4 +1,4 @@
-package com.trading.exchange.kraken;
+package com.github.momafoudh.sushibot.exchange.kraken;
 
 public class APICounter {
 

@@ -7,7 +7,6 @@ plugins {
 
 ext {
     javaVersion = JavaVersion.VERSION_1_8
-
     scriptsLocation = 'gradle' + File.separator + 'scripts' + File.separator //location of script plugins
 }
 
@@ -37,9 +36,9 @@ dependencies {
     testCompile 'junit:junit:3.8.1'
 }
 
-group = 'com.github.mo-mahfoudh'
+group = 'com.github.momahfoudh'
 version = '0.0.1-SNAPSHOT'
-description = 'sushi-bot'
+description = 'sushibot'
 sourceCompatibility = '1.8'
 
 publishing {

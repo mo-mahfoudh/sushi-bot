@@ -1,4 +1,4 @@
-package com.trading.exchange.kraken.remote;
+package com.github.momafoudh.sushibot.exchange.kraken.remote;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

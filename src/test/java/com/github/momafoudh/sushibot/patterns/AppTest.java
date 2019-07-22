@@ -1,4 +1,4 @@
-package com.trading.patterns;
+package com.github.momafoudh.sushibot.patterns;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

@@ -1,17 +1,17 @@
-package com.trading.charts;
+package com.github.momafoudh.sushibot.charts;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.SwingWorker;
 
+import com.github.momafoudh.sushibot.manager.BuyPriceProvider;
 import org.knowm.xchart.SwingWrapper;
 import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYChartBuilder;
 import org.knowm.xchart.XYSeries.XYSeriesRenderStyle;
 import org.knowm.xchart.style.Styler.LegendPosition;
 
-import com.trading.manager.BuyPriceProvider;
 
 /**
  * Creates a real-time chart using SwingWorker

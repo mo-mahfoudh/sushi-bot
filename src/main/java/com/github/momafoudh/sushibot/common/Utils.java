@@ -1,4 +1,4 @@
-package com.trading.common;
+package com.github.momafoudh.sushibot.common;
 
 import java.util.Arrays;
 import java.util.Collections;

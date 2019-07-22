@@ -1,9 +1,10 @@
-package com.trading.manager;
+package com.github.momafoudh.sushibot.manager;
 
 import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicReference;
 
-import com.trading.exchange.PriceEndpoint;
+import com.github.momafoudh.sushibot.exchange.PriceEndpoint;
+
 
 /**
  * 
@@ -12,10 +13,10 @@ import com.trading.exchange.PriceEndpoint;
  */
 public class BuyPriceProvider {
 // matchingPrices is for testing purposes only
-	public LinkedList matchingPrices = new LinkedList<Double>();
+	public  LinkedList              matchingPrices = new LinkedList<Double>();
 	private AtomicReference<Double> currentPrice = new AtomicReference(0.0);
-	private PriceEndpoint priceEndpoint;
-	private String assetPair;
+	private PriceEndpoint           priceEndpoint;
+	private String                  assetPair;
 
 	public BuyPriceProvider(String assetPair, PriceEndpoint p) {
 		this.priceEndpoint = p;

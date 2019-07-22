@@ -1,10 +1,11 @@
-package com.trading.exchange.binance;
+package com.github.momafoudh.sushibot.exchange.binance;
 
 import com.binance.api.client.BinanceApiClientFactory;
 import com.binance.api.client.BinanceApiRestClient;
 import com.binance.api.client.domain.market.TickerStatistics;
 import com.binance.api.client.exception.BinanceApiException;
-import com.trading.exchange.PriceEndpoint;
+import com.github.momafoudh.sushibot.exchange.PriceEndpoint;
+
 
 /**
  * Examples on how to get market data information such as the latest price of a

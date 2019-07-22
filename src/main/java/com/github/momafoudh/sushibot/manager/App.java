@@ -1,12 +1,12 @@
-package com.trading.manager;
+package com.github.momafoudh.sushibot.manager;
 
-import com.trading.charts.RealTimePricesChart;
-import com.trading.exchange.PriceEndpoint;
-import com.trading.exchange.binance.BinanceOperationsLive;
-import com.trading.exchange.kraken.KrakenOperationsLive;
-import com.trading.exchange.kraken.KrakenTradingPairs;
-import com.trading.patterns.Pattern;
-import com.trading.patterns.PennantPattern;
+import com.github.momafoudh.sushibot.charts.RealTimePricesChart;
+import com.github.momafoudh.sushibot.exchange.PriceEndpoint;
+import com.github.momafoudh.sushibot.exchange.binance.BinanceOperationsLive;
+import com.github.momafoudh.sushibot.exchange.kraken.KrakenOperationsLive;
+import com.github.momafoudh.sushibot.exchange.kraken.KrakenTradingPairs;
+import com.github.momafoudh.sushibot.patterns.Pattern;
+import com.github.momafoudh.sushibot.patterns.PennantPattern;
 
 /**
  * 

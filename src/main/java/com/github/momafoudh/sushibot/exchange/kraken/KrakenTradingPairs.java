@@ -1,4 +1,4 @@
-package com.trading.exchange.kraken;
+package com.github.momafoudh.sushibot.exchange.kraken;
 
 public enum KrakenTradingPairs {
 	//total minium budget 171

@@ -1,9 +1,9 @@
-package com.trading.patterns;
+package com.github.momafoudh.sushibot.patterns;
 
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicReference;
 
-import com.trading.manager.BuyPriceProvider;
+import com.github.momafoudh.sushibot.manager.BuyPriceProvider;
 
 public abstract class Pattern {
 

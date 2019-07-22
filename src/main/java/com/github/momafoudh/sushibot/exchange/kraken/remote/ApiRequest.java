@@ -1,4 +1,4 @@
-package com.trading.exchange.kraken.remote;
+package com.github.momafoudh.sushibot.exchange.kraken.remote;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,7 +12,6 @@ import java.util.Map.Entry;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import com.trading.exchange.kraken.remote.KrakenApi.Method;
 
 /**
  * Represents an HTTPS request for querying the Kraken API.
@@ -119,7 +118,7 @@ class ApiRequest {
 	 * @throws MalformedURLException if the request URL could not be created with
 	 *                               the method name
 	 */
-	public String setMethod(Method method) throws MalformedURLException {
+	public String setMethod(KrakenApi.Method method) throws MalformedURLException {
 
 		if (method == null) {
 			throw new IllegalArgumentException(ERROR_NULL_METHOD);
