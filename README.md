@@ -1,3 +1,3 @@
 # sushi-bot
 
-To run the application  go to the package manager and excute the class App.
+To run the application go to index.html . Select an exchange and click start .
