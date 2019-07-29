@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Shushi bot</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	 	 <script type='text/javascript' src="utils.js">  </script>
+     <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <div class="wrapper">	
+      <h1>Sushi bot</h1>
+      <h2>The autonomus trading platform</h2>
+	
+<div align="center">
+  <table><tr><td id="statuscolor">&nbsp;&nbsp;</td><td id="status"></td></tr></tr></table>
+ 
+</div>
+ 
+
+<div align="right"><select id="exchange" onchange="setExchange()">
+ <option value="kraken">select</option>
+  <option value="kraken">Kraken</option>
+  <option value="Bianance">Binance</option>
+ </select>
+</select><input onclick="start()" type="button" value="start" id="actionButton"></input>
+</div>
+      <canvas id="chart" width="1600" height="900"></canvas>
+      <div class="httpStatus"> 
+        <table ><tr><td><span id="priceStatusEndpointStatus">&nbsp;&nbsp;</span>&nbsp;price endpoint</td> 
+           <td><span id="patternStatusEndpointStatus">&nbsp;&nbsp;</span>&nbsp;pattern endpoint</td></tr>
+        </table>
+        </div>
+    </div>
+     
+  	 <script type='text/javascript' src="script.js">  </script>
+  
+
+
+   </body>
+</html>

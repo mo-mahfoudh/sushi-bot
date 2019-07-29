@@ -2,43 +2,45 @@ package com.github.momafoudh.sushibot.charts;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.swing.SwingWorker;
 
-import com.github.momafoudh.sushibot.manager.BuyPriceProvider;
 import org.knowm.xchart.SwingWrapper;
 import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYChartBuilder;
 import org.knowm.xchart.XYSeries.XYSeriesRenderStyle;
 import org.knowm.xchart.style.Styler.LegendPosition;
 
+import com.github.momafoudh.sushibot.dto.PriceDataDto;
+import com.github.momafoudh.sushibot.manager.BuyPriceProvider;
 
 /**
  * Creates a real-time chart using SwingWorker
  */
 public class RealTimePricesChart {
+	public static final String PROCESS_ID = UUID.randomUUID().toString();
 	static BuyPriceProvider bp;
+	static String assetPair;
 	MySwingWorker mySwingWorker;
 	SwingWrapper<XYChart> sw;
 	XYChart chart;
 	public static double[] patternToShow;
 
-	public RealTimePricesChart(BuyPriceProvider bp) {
-		this.bp = bp;
+	public RealTimePricesChart(BuyPriceProvider buyp, String assetpair) {
+		bp = buyp;
+		assetPair = assetpair;
 
 	}
 
 	public static void main(String[] args) throws Exception {
 
-		RealTimePricesChart swingWorkerRealTime = new RealTimePricesChart(bp);
+		RealTimePricesChart swingWorkerRealTime = new RealTimePricesChart(bp, assetPair);
 		swingWorkerRealTime.go();
 	}
 
 	public void go() {
-
-		// Create Chart
-		while (bp.getPrice() == 0)
-			;
+		System.out.println("plotting");
 		// chart = QuickChart.getChart("SUSHI -" + bp.getAssetPair() + " Real-time
 		// prices", "Time", "Value", "prices",
 		// new double[] { bp.getPrice() }, new double[] { bp.getPrice() });
@@ -50,8 +52,8 @@ public class RealTimePricesChart {
 
 		chart.getStyler().setPlotMargin(0);
 		chart.getStyler().setPlotContentSize(.95);
-		double intiprice = bp.getPrice();
-		chart.addSeries(bp.getAssetPair(), new double[] { intiprice }, new double[] { intiprice });
+		double intiprice = bp.getPriceAsPriceDataDto(this.getClass()).getPriceValue();
+		chart.addSeries(assetPair, new double[] { intiprice }, new double[] { intiprice });
 
 		// Show it
 		sw = new SwingWrapper<XYChart>(chart);
@@ -72,13 +74,13 @@ public class RealTimePricesChart {
 
 		@Override
 		protected Boolean doInBackground() throws Exception {
-
+			System.out.println("call");
 			while (!isCancelled()) {
-				if (patternToShow != null) {
+				PriceDataDto newPRice = bp.getPriceAsPriceDataDto(this.getClass());
+				System.out.println(newPRice.getPriceReadDate().getTime());
+				System.out.println("chart read price date" + newPRice.getPriceReadDate().toString());
+				fifo.add(newPRice.getPriceValue());
 
-				}
-				time++;
-				fifo.add(bp.getPrice());
 				if (fifo.size() > 500) {
 					fifo.removeFirst();
 				}
@@ -95,7 +97,6 @@ public class RealTimePricesChart {
 					// eat it. caught when interrupt is called
 					System.out.println("MySwingWorker shut down.");
 				}
-
 			}
 
 			return true;
@@ -106,7 +107,7 @@ public class RealTimePricesChart {
 
 			double[] mostRecentDataSet = chunks.get(chunks.size() - 1);
 
-			chart.updateXYSeries(bp.getAssetPair(), null, mostRecentDataSet, null);
+			chart.updateXYSeries(assetPair, null, mostRecentDataSet, null);
 
 			/*
 			 * if (patternToShow != null) { double[] timeData =
@@ -130,7 +131,7 @@ public class RealTimePricesChart {
 			long start = System.currentTimeMillis();
 			long duration = System.currentTimeMillis() - start;
 			try {
-				Thread.sleep(40 - duration); // 40 ms ==> 25fps
+				Thread.sleep(10000); //
 				// Thread.sleep(400 - duration); // 40 ms ==> 2.5fps
 			} catch (InterruptedException e) {
 			}

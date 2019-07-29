@@ -1,10 +1,12 @@
 package com.github.momafoudh.sushibot.manager;
 
+import java.util.Date;
 import java.util.LinkedList;
-import java.util.concurrent.atomic.AtomicReference;
 
+import com.github.momafoudh.sushibot.common.Log;
+import com.github.momafoudh.sushibot.dto.PriceDataDto;
 import com.github.momafoudh.sushibot.exchange.PriceEndpoint;
-
+import com.github.momafoudh.sushibot.patterns.Pattern;
 
 /**
  * 
@@ -13,74 +15,72 @@ import com.github.momafoudh.sushibot.exchange.PriceEndpoint;
  */
 public class BuyPriceProvider {
 // matchingPrices is for testing purposes only
-	public  LinkedList              matchingPrices = new LinkedList<Double>();
-	private AtomicReference<Double> currentPrice = new AtomicReference(0.0);
-	private PriceEndpoint           priceEndpoint;
-	private String                  assetPair;
+	public LinkedList matchingPrices = new LinkedList<Double>();
+	private PriceEndpoint priceEndpoint;
+	private String assetPair;
+	private long numberOfDataRead;
+	public LinkedList<PriceDataDto> collectedPrices = new LinkedList<>();
+	public static BuyPriceProvider instance;
+	private static Log transactions = new Log("transaction");
 
-	public BuyPriceProvider(String assetPair, PriceEndpoint p) {
+	private BuyPriceProvider(String assetPair, PriceEndpoint p) {
 		this.priceEndpoint = p;
 
-		initTestData();
 		this.assetPair = assetPair;
-		updatePricePeriodically();
+		if (instance == null)
+			instance = this;
 
 	}
 
-	private void initTestData() {
-		matchingPrices.addLast(9.0);
-		matchingPrices.addLast(1.1);
+	public static BuyPriceProvider getInstance(String assetPair, PriceEndpoint p) {
 
-		matchingPrices.addLast(8.0);
-		matchingPrices.addLast(2.0);
-
-		matchingPrices.addLast(7.0);
-		matchingPrices.addLast(3.0);
-
-		matchingPrices.addLast(6.0);
-		matchingPrices.addLast(4.0);
-	}
-
-	public synchronized double getPrice() {
-
-		return currentPrice.get();
+		new BuyPriceProvider(assetPair, p);
+		return instance;
 
 	}
 
-	private void updatePricePeriodically() {
+	public static BuyPriceProvider getCurrentInstance() {
 
-		Thread t = new Thread(new Runnable() {
+		return instance;
 
-			public void run() {
-				// Date start = new Date();
-				// boolean showTestMessage = true;
-				while (true) {
-					// here we serve prices that matche pennant partern after x seconds for testing
-					// purposes
-					/*
-					 * if (new Date().getTime() - start.getTime() > 1000 * 20 &&
-					 * matchingPrices.size() > 0) { currentPrice = (Double) matchingPrices.poll();
-					 * if (showTestMessage)
-					 * System.out.println("serving matching prices for test prupose");
-					 * showTestMessage = false; }
-					 * 
-					 * else { double rangeMin = 1.0; double rangeMax = 10.0; currentPrice = rangeMin
-					 * + (rangeMax - rangeMin) * new Random().nextDouble(); }
-					 */
+	}
 
-					currentPrice = new AtomicReference<Double>(priceEndpoint.getAssetAskPrice(assetPair));
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+	/**
+	 * If the caller is a pattern then get a new price store it before returning it
+	 * if the caller is not a pattern (graphic chart ) then retreive a stored price
+	 * 
+	 * @param clazz the class of the caller
+	 * @return
+	 */
+	public PriceDataDto getPriceAsPriceDataDto(Class<?> clazz) {
+		if (Pattern.class.isAssignableFrom(clazz)) {
+			PriceDataDto price = getNewPriceAndStoreIt();
+			transactions.info("*Pattern" + " " + price + " " + collectedPrices.size());
+			return price;
 
-				}
-			}
-		});
-		t.start();
+		}
+		PriceDataDto price = collectedPrices.pollFirst();
+		transactions.info("*Non Pattern" + " " + price + " " + collectedPrices.size());
+		return price;
+	}
 
+	public double getPrice() {
+
+		return priceEndpoint.getAssetAskPrice(assetPair);
+	}
+
+	private PriceDataDto getNewPriceAndStoreIt() {
+		double priceValue = priceEndpoint.getAssetAskPrice(assetPair);
+
+		PriceDataDto price = new PriceDataDto();
+		price.setPriceReadDate(new Date());
+		price.setPriceReadSequenceNumber(numberOfDataRead);
+		price.setPriceValue(priceValue);
+		if (priceValue > 0) {
+			collectedPrices.add(price);
+			numberOfDataRead++;
+		}
+		return price;
 	}
 
 	public String getAssetPair() {
